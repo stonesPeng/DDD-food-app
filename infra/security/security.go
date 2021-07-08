@@ -5,7 +5,11 @@
 **/
 package security
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+	"errors"
+	"strings"
+)
 
 /**
  * @Description:  hash256 for str
@@ -20,4 +24,15 @@ func Hash(str string) (*string, error) {
 	}
 	result := string(h.Sum(nil))
 	return &result, nil
+}
+
+func VerifyPassword(c1 string, c2 string) error {
+	if hashStr, err := Hash(c1); err != nil {
+		return err
+	} else {
+		if res := strings.Compare(*hashStr, c2); res != 0 {
+			return errors.New("password not be equal")
+		}
+	}
+	return nil
 }
