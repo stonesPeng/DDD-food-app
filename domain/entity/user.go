@@ -6,6 +6,7 @@
 package entity
 
 import (
+	"DDD-food-app/infra/security"
 	"github.com/badoux/checkmail"
 	"html"
 	"strings"
@@ -29,8 +30,18 @@ type PublicUser struct {
 	LastName  string `gorm:"size:100;not null;" json:"last_name"`
 }
 
+/**
+ * @Description: 特殊处理密码，不可逆
+ * @receiver u
+ * @return error
+ */
 func (u *User) BeforeSave() error {
-
+	if result, err := security.Hash(u.Password); err != nil {
+		return err
+	} else {
+		u.Password = *result
+		return nil
+	}
 }
 
 type Users []User
