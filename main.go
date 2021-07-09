@@ -9,6 +9,7 @@ import (
 	"DDD-food-app/infra/auth"
 	"DDD-food-app/infra/repository"
 	"DDD-food-app/intefaces"
+	"DDD-food-app/intefaces/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -47,7 +48,7 @@ func main() {
 
 			engine := gin.Default()
 
-			//TODO middleware add for CORS
+			engine.Use(middleware.CORSMiddleware())
 
 			engine.POST("/users", users.SaveUser)
 			engine.GET("/users", users.GetUsers)
