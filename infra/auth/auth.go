@@ -26,6 +26,10 @@ type ClientData struct {
 	client *redis.Client
 }
 
+func NewAuth(client *redis.Client) *ClientData {
+	return &ClientData{client: client}
+}
+
 type TokenDetails struct {
 	AccessToken  string
 	RefreshToken string
