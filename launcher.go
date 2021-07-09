@@ -31,15 +31,15 @@ func main() {
 	port := os.Getenv("DB_PORT")
 
 	//redis details
-	redis_host := os.Getenv("REDIS_HOST")
-	redis_port := os.Getenv("REDIS_PORT")
-	redis_password := os.Getenv("REDIS_PASSWORD")
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+	redisPassword := os.Getenv("REDIS_PASSWORD")
 
 	if repositories, err := repository.NewRepositories(user, password, port, host, dbname); err != nil {
 		panic(err)
 	} else {
 		repositories.AutoMigrate()
-		if redisService, er := auth.NewRedisDB(redis_host, redis_port, redis_password); er != nil {
+		if redisService, er := auth.NewRedisDB(redisHost, redisPort, redisPassword); er != nil {
 			log.Fatal(er)
 		} else {
 			token := auth.NewToken()
@@ -59,11 +59,11 @@ func main() {
 
 			engine.POST("/refresh", authenticate.Refresh)
 
-			app_port := os.Getenv("PORT")
-			if app_port == "" {
-				app_port = "8080"
+			appPort := os.Getenv("PORT")
+			if appPort == "" {
+				appPort = "8080"
 			}
-			log.Fatal(engine.Run(":" + app_port))
+			log.Fatal(engine.Run(":" + appPort))
 		}
 	}
 
