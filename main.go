@@ -50,7 +50,7 @@ func main() {
 			//TODO middleware add for CORS
 
 			engine.POST("/users", users.SaveUser)
-			engine.GET("/usesr", users.GetUsers)
+			engine.GET("/users", users.GetUsers)
 			engine.GET("/users/:user_id", users.GetUser)
 
 			engine.POST("/login", authenticate.Login)
