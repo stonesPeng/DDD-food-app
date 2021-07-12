@@ -32,4 +32,7 @@ POST http://127.0.0.1:8080/login
     "password":"asdasdasd"
 }
 
-> {%    client.log(JSON.stringify(response.body)) %}
+> {%
+ client.log(JSON.stringify(response.body))
+ client.global.set("auth_token",response.body.access_token)
+ %}
