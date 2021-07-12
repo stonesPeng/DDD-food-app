@@ -7,6 +7,7 @@ package security
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"strings"
 )
@@ -22,7 +23,7 @@ func Hash(str string) (*string, error) {
 	if _, err := h.Write([]byte(str)); err != nil {
 		return nil, err
 	}
-	result := string(h.Sum(nil))
+	result := hex.EncodeToString(h.Sum(nil))
 	return &result, nil
 }
 

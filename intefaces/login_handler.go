@@ -50,13 +50,13 @@ func (authenticate Authenticate) Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, userErr)
 		return
 	}
-	ts, tErr := authenticate.tokenService.CreateToken(u.ID)
+	ts, tErr := authenticate.tokenService.CreateToken(uint64(u.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
 		c.JSON(http.StatusUnprocessableEntity, tErr.Error())
 		return
 	}
-	saveErr := authenticate.authService.CreateAuth(u.ID, ts)
+	saveErr := authenticate.authService.CreateAuth(uint64(u.ID), ts)
 	if saveErr != nil {
 		c.JSON(http.StatusInternalServerError, saveErr.Error())
 		return

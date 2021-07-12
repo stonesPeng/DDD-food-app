@@ -19,8 +19,8 @@ type Repositories struct {
 }
 
 func NewRepositories(user, password, port, host, name string) (*Repositories, error) {
-	dbUrl := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", host, port, user, name, password)
-	if db, err := gorm.Open(mysql.Open(dbUrl), &gorm.Config{
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s", user, password, host, port, name, "10s")
+	if db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true, //禁用外键约束
 	}); err != nil {
 		return nil, err
@@ -32,6 +32,6 @@ func NewRepositories(user, password, port, host, name string) (*Repositories, er
 	}
 }
 
-func (s *Repositories) AutoMigrate() string {
-	return s.db.AutoMigrate(&entity.User{}).Error()
+func (s *Repositories) AutoMigrate() {
+	s.db.AutoMigrate(&entity.User{}, &entity.PublicUser{})
 }

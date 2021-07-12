@@ -8,20 +8,18 @@ package entity
 import (
 	"DDD-food-app/infra/security"
 	"github.com/badoux/checkmail"
+	"gorm.io/gorm"
 	"html"
 	"strings"
 	"time"
 )
 
 type User struct {
-	ID        uint64     `gorm:"primary_key;auto_increment" json:"id,omitempty,string"`
-	FirstName string     `gorm:"size:100;not null;" json:"first_name"`
-	LastName  string     `gorm:"size:100;not null;" json:"last_name"`
-	Email     string     `gorm:"size:100;not null;unique" json:"email"`
-	Password  string     `gorm:"size:100;not null;" json:"password"`
-	CreatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	gorm.Model
+	FirstName string `gorm:"size:100;not null;" json:"first_name"`
+	LastName  string `gorm:"size:100;not null;" json:"last_name"`
+	Email     string `gorm:"size:100;not null;unique" json:"email"`
+	Password  string `gorm:"size:100;not null;" json:"password"`
 }
 
 type PublicUser struct {
@@ -35,7 +33,7 @@ type PublicUser struct {
  * @receiver u
  * @return error
  */
-func (u *User) BeforeSave() error {
+func (u *User) BeforeSave(tx *gorm.DB) error {
 	if result, err := security.Hash(u.Password); err != nil {
 		return err
 	} else {
@@ -46,7 +44,6 @@ func (u *User) BeforeSave() error {
 
 type Users []User
 
-//why return []interface{} ,not interface{}
 func (users Users) PublishUsers() []interface{} {
 	result := make([]interface{}, len(users))
 	for index, user := range users {
@@ -57,7 +54,7 @@ func (users Users) PublishUsers() []interface{} {
 
 func (u *User) PublishUser() interface{} {
 	return &PublicUser{
-		ID:        u.ID,
+		ID:        uint64(u.ID),
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
 	}
